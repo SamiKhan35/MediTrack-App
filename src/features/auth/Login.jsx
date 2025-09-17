@@ -1,15 +1,54 @@
 import React, { useState } from "react";
 import { FaGoogle, FaFacebook } from "react-icons/fa";
 import loginimage from "../../assets/Images/loginimage.jpg";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const [isSignup, setIsSignup] = useState(false);
+  const [formData, setFormData] = useState({ name: "", email: "", password: "" });
+  const [message, setMessage] = useState("");
+  const navigate = useNavigate();
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      if (isSignup) {
+        // SIGNUP
+        const res = await axios.post("http://localhost:5000/api/users", {
+          name: formData.name,
+          email: formData.email,
+          password: formData.password,
+        });
+        setMessage("User Registered Successfully");
+        console.log("Signup Record:", res.data);
+      } else {
+        // LOGIN
+        const res = await axios.post("http://localhost:5000/api/users/login", {
+          email: formData.email,
+          password: formData.password,
+        });
+        setMessage("Logged in successfully!");
+        console.log("Login Response:", res.data);
+
+        // Navigate to Nav component
+        navigate("/nav");
+      }
+    } catch (error) {
+      console.error(error.response?.data || error.message);
+      setMessage("Error: " + (error.response?.data?.message || error.message));
+    }
+  };
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 h-screen">
-      {/* ✅ Left Side - fixed full screen image */}
+      {/* Left Side - fixed full screen image */}
       <div className="h-screen w-full">
-        <img src={loginimage} alt="" className="w-full h-full object-cover" />
+        <img src={loginimage} alt="login" className="w-full h-full object-cover" />
       </div>
 
       {/* Right Side */}
@@ -29,20 +68,29 @@ const Login = () => {
             <h2 className="text-xl font-bold mb-4 text-[#14476D] text-center">
               Sign Up
             </h2>
-            <form className="flex flex-col gap-4">
+            <form onSubmit={handleSubmit} className="flex flex-col gap-4">
               <input
                 type="text"
-                placeholder="User Name:"
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+                placeholder="User Name"
                 className="border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
               <input
                 type="email"
-                placeholder="Email:"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                placeholder="Email"
                 className="border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
               <input
                 type="password"
-                placeholder="Password:"
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                placeholder="Password"
                 className="border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
               <button
@@ -70,15 +118,21 @@ const Login = () => {
             <h2 className="text-xl font-bold mb-4 text-[#14476D] text-center">
               Login
             </h2>
-            <form className="flex flex-col gap-4">
+            <form onSubmit={handleSubmit} className="flex flex-col gap-4">
               <input
                 type="email"
-                placeholder="Email:"
-                className="border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2  focus:ring-blue-500"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                placeholder="Email"
+                className="border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
               <input
                 type="password"
-                placeholder="Password:"
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                placeholder="Password"
                 className="border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
 
@@ -121,10 +175,15 @@ const Login = () => {
                 onClick={() => setIsSignup(true)}
                 className="font-bold text-[#14476D] hover:underline"
               >
-                Sign up
+                Sign Up
               </button>
             </p>
           </>
+        )}
+
+        {/*Show messages */}
+        {message && (
+          <p className="text-center mt-4 font-semibold text-red-600">{message}</p>
         )}
       </div>
     </div>

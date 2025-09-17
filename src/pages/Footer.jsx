@@ -1,6 +1,7 @@
 import React from "react";
 import { Mail, Phone, MapPin } from "lucide-react";
 import { FaLinkedin, FaFacebook, FaInstagram, FaTwitter } from "react-icons/fa";
+import navbarlogo1 from "@/assets/Images/navbarlogo1.png";
 
 const Footer = () => {
   return (
@@ -37,7 +38,12 @@ const Footer = () => {
       <div className="max-w-7xl mx-auto px-6 py-12 grid grid-cols-1 md:grid-cols-4 gap-10">
         {/* Logo + Description */}
         <div>
-          <h2 className="text-2xl font-bold mb-3">MEDITRACK</h2>
+        <img
+        src={navbarlogo1}
+        alt="MediTreck Logo"
+        className="h-16 w-auto max-w-[160px] object-contain filter brightness-0 invert cursor-pointer transition-transform duration-300 hover:scale-105"
+        />
+
           <p className="text-sm text-gray-200 leading-relaxed">
             MediTrack simplifies healthcare for hospitals and patients. Manage
             appointments, access records, and improve care — all in one place.

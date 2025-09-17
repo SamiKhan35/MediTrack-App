@@ -37,6 +37,8 @@ const HignlightedCard = () => {
             rating= {item.rating}
             
             />
+
+            
           </div>
         ))}
       </div>
